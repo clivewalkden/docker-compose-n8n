@@ -29,14 +29,17 @@ services:
     image: redis:7-alpine
     container_name: n8n_redis
     restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_PASSWORD:-changeme}
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-changeme}
     volumes:
       - redis_data:/data
+      - redis_conf:/usr/local/etc/redis
       - /etc/localtime:/etc/localtime:ro
     networks:
       - n8n_network
+    command: >
+      sh -c "echo 'requirepass \"$$REDIS_PASSWORD\"' > /usr/local/etc/redis/redis.conf &&
+             redis-server /usr/local/etc/redis/redis.conf"
     healthcheck:
       test: ['CMD-SHELL', 'timeout 5 nc -z localhost 6379 || exit 1']
       interval: 10s
@@ -190,6 +193,8 @@ volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  redis_conf:
     driver: local
   n8n_data:
     driver: local
