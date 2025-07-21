@@ -74,6 +74,10 @@ services:
       - QUEUE_BULL_REDIS_PASSWORD=${REDIS_PASSWORD:-changeme}
       - EXECUTIONS_MODE=${EXECUTIONS_MODE:-queue}
       
+      # Task Runners Configuration
+      - N8N_RUNNERS_ENABLED=true
+      - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=true
+      
       # Security Configuration
       - N8N_BASIC_AUTH_ACTIVE=${N8N_BASIC_AUTH_ACTIVE:-true}
       - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
@@ -123,9 +127,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 1.5G
         reservations:
-          memory: 512M
+          memory: 384M
 
   # n8n Worker (for queue mode - optional but recommended for production)
   n8n-worker:
@@ -152,6 +156,9 @@ services:
       - QUEUE_BULL_REDIS_PASSWORD=${REDIS_PASSWORD:-changeme}
       - EXECUTIONS_MODE=queue
       
+      # Task Runners Configuration
+      - N8N_RUNNERS_ENABLED=true
+      
       # Timezone
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE:-UTC}
       - TZ=${GENERIC_TIMEZONE:-UTC}
@@ -175,9 +182,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 1.5G
         reservations:
-          memory: 256M
+          memory: 512M
 
 volumes:
   postgres_data:
