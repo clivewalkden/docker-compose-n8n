@@ -38,7 +38,7 @@ services:
     networks:
       - n8n_network
     healthcheck:
-      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD:-changeme}', 'ping']
+      test: ['CMD-SHELL', 'timeout 5 nc -z localhost 6379 || exit 1']
       interval: 10s
       timeout: 5s
       retries: 5
